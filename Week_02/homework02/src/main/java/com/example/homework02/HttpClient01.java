@@ -1,26 +1,51 @@
 package com.example.homework02;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.BufferedReader;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.net.URISyntaxException;
 
 public class HttpClient01 {
-    public static void main(String[] args) throws IOException {
-        CloseableHttpClient build = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet("http://localhost:8805");
-        CloseableHttpResponse execute = build.execute(httpGet);
-        HttpEntity entity = execute.getEntity();
-        InputStream content = entity.getContent();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(content, StandardCharsets.UTF_8))) {
-            System.out.println("请求结果：" + reader.readLine());
+    public static void main(String[] args) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            final HttpGet httpget = new HttpGet("http://localhost:8805");
+
+            System.out.println("Executing request " + httpget.getMethod() + " " + httpget.getUri());
+            // Create a custom response handler
+            final HttpClientResponseHandler<String> responseHandler = new HttpClientResponseHandler<String>() {
+
+                @Override
+                public String handleResponse(
+                        final ClassicHttpResponse response) throws IOException {
+                    final int status = response.getCode();
+                    if (status >= HttpStatus.SC_SUCCESS && status < HttpStatus.SC_REDIRECTION) {
+                        final HttpEntity entity = response.getEntity();
+                        try {
+                            return entity != null ? EntityUtils.toString(entity) : null;
+                        } catch (final ParseException ex) {
+                            throw new ClientProtocolException(ex);
+                        }
+                    } else {
+                        throw new ClientProtocolException("Unexpected response status: " + status);
+                    }
+                }
+
+            };
+            final String responseBody = httpclient.execute(httpget, responseHandler);
+            System.out.println("----------------------------------------");
+            System.out.println(responseBody);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
         }
     }
 }
