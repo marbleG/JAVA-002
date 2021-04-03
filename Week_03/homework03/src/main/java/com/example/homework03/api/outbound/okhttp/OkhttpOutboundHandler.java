@@ -1,6 +1,8 @@
 package com.example.homework03.api.outbound.okhttp;
 
+import com.example.homework03.api.filter.HeaderHttpResponseFilter;
 import com.example.homework03.api.filter.HttpRequestFilter;
+import com.example.homework03.api.filter.HttpResponseFilter;
 import com.example.homework03.api.outbound.httpclient4.NamedThreadFactory;
 import com.example.homework03.api.router.HttpEndpointRouter;
 import com.example.homework03.api.router.RandomHttpEndpointRouter;
@@ -13,6 +15,8 @@ import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -30,6 +34,7 @@ public class OkhttpOutboundHandler {
     private List<String> backendUrls;
 
     HttpEndpointRouter router = new RandomHttpEndpointRouter();
+    HttpResponseFilter filter = new HeaderHttpResponseFilter();
 
 
     public OkhttpOutboundHandler(List<String> backends) {
@@ -103,6 +108,9 @@ public class OkhttpOutboundHandler {
             response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(resp.body().bytes()));
             response.headers().set("Content-Type", "application/json");
             response.headers().setInt("Content-Length", Integer.parseInt(resp.header("Content-Length", "0")));
+            //header 添加正式访问地址
+            filter.filter(response,resp);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
