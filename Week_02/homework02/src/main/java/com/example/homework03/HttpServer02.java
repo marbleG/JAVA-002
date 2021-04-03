@@ -1,4 +1,4 @@
-package com.example.homework02;
+package com.example.homework03;
 
 import java.io.IOException;
 import java.io.PrintWriter;
