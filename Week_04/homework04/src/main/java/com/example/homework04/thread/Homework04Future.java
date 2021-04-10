@@ -3,7 +3,6 @@ package com.example.homework04.thread;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -13,12 +12,12 @@ import java.util.concurrent.FutureTask;
  *
  * 通过future的get()获取result的值
  */
-public class Homework03Future implements Callable<Integer> {
+public class Homework04Future implements Callable<Integer> {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         long start=System.currentTimeMillis();
         // 在这里创建一个线程或线程池，
-        Homework03Future future = new Homework03Future();
+        Homework04Future future = new Homework04Future();
         FutureTask<Integer> task = new FutureTask<>(future);
         //启动线程，异步执行方法
         new Thread(task).start();

@@ -1,37 +1,32 @@
 package com.example.homework04.thread;
 
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.*;
 
 /**
  * 本周作业：（必做）思考有多少种方式，在main函数启动一个新线程或线程池，
  * 异步运行一个方法，拿到这个方法的返回值后，退出主线程？
  * 写出你的方法，越多越好，提交到github。
  *
- * 通过循环获取result的值
+ * 通过执行器获取result的值
  */
-public class Homework03BaseThread {
-    private int result = 0;
+public class Homework04Executor implements Callable<Integer> {
+    private static final ExecutorService service = Executors.newCachedThreadPool();
 
-    public static void main(String[] args) throws InterruptedException {
-        Homework03BaseThread homework03BaseThread = new Homework03BaseThread();
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         long start=System.currentTimeMillis();
         // 在这里创建一个线程或线程池，
-        // 异步执行 下面方法
-        new Thread(()->{
-            homework03BaseThread.result= sum(); //这是得到的返回值
-        }).start();
-
-        while(homework03BaseThread.result == 0){
-            Thread.sleep(200);
-        }
-
+        Homework04Executor future = new Homework04Executor();
+        //通过线程池提交异步任务
+        Future<Integer> submit = service.submit(future);
+        System.out.println("其他业务。。。");
         // 确保  拿到result 并输出
-        System.out.println("异步计算结果为："+homework03BaseThread.result);
+        System.out.println("异步计算结果为："+ submit.get());
 
         System.out.println("使用时间："+ (System.currentTimeMillis()-start) + " ms");
 
         // 然后退出main线程
+        service.shutdown();
     }
 
     private static int sum() {
@@ -42,5 +37,10 @@ public class Homework03BaseThread {
         if ( a < 2)
             return 1;
         return fibo(a-1) + fibo(a-2);
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        return sum();
     }
 }

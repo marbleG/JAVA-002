@@ -10,20 +10,20 @@ import java.util.concurrent.CountDownLatch;
  * <p>
  * 通过CountDownLatch获取result的值
  */
-public class Homework03CountDownLatchTask {
+public class Homework04CountDownLatchTask {
 
     private CountDownLatch latch;
 
     private int sum = 0;
 
-    public Homework03CountDownLatchTask(CountDownLatch latch) {
+    public Homework04CountDownLatchTask(CountDownLatch latch) {
         this.latch = latch;
     }
 
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         long start = System.currentTimeMillis();
-        final Homework03CountDownLatchTask method = new Homework03CountDownLatchTask(latch);
+        final Homework04CountDownLatchTask method = new Homework04CountDownLatchTask(latch);
 
         // 在这里创建一个线程或线程池，
         new Thread(() -> {

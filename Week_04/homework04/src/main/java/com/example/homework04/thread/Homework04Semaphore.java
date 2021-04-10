@@ -1,9 +1,6 @@
 package com.example.homework04.thread;
 
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -13,22 +10,22 @@ import java.util.concurrent.Semaphore;
  * <p>
  * 通过Semaphore获取result的值
  */
-public class Homework03Semaphore {
+public class Homework04Semaphore {
     private int sum = 0;
     private final Semaphore semaphore = new Semaphore(1);
 
     public static void main(String[] args) throws InterruptedException {
-        Homework03Semaphore homework03Semaphore = new Homework03Semaphore();
+        Homework04Semaphore homework04Semaphore = new Homework04Semaphore();
         long start = System.currentTimeMillis();
         // 在这里创建一个线程或线程池，
-        homework03Semaphore.semaphore.acquireUninterruptibly();
+        homework04Semaphore.semaphore.acquireUninterruptibly();
         new Thread(() -> {
-            homework03Semaphore.sum();
+            homework04Semaphore.sum();
         }).start();
         //启动线程，异步执行方法
         System.out.println("其他业务。。。");
         // 确保  拿到result 并输出
-        System.out.println("异步计算结果为：" + homework03Semaphore.getValue());
+        System.out.println("异步计算结果为：" + homework04Semaphore.getValue());
 
         System.out.println("使用时间：" + (System.currentTimeMillis() - start) + " ms");
 
