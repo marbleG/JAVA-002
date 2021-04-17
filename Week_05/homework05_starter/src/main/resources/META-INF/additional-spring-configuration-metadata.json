@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "student.name",
+      "description": "student name.",
+      "defaultValue": "zhangsan"
+    }
+  ]
+}
