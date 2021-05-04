@@ -1,10 +1,10 @@
 
 -- # 用户表:用户id、名称、密码、手机号
 CREATE TABLE `user` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(16) NOT NULL DEFAULT '' COMMENT '名称',
   `password` varchar(16) NOT NULL DEFAULT '' COMMENT '密码',
-  `phoneNumber` varchar(15) NOT NULL DEFAULT '' COMMENT '手机号',
+  `phone` varchar(15) NOT NULL DEFAULT '' COMMENT '手机号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
 
