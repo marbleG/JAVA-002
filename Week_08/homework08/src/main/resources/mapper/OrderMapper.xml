@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marble.homework08_sharding.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.marble.homework08_sharding.entity.Order">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="uid" jdbcType="INTEGER" property="uid"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="price" jdbcType="INTEGER" property="price"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        ,  uid, address, price, status
+    </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `order`
+    </select>
+
+    <insert id="insert" parameterType="com.marble.homework08_sharding.entity.Order">
+        insert into `order` (id, uid, address, price, status)
+        values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR},
+                #{price,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}
+    </insert>
+</mapper>
