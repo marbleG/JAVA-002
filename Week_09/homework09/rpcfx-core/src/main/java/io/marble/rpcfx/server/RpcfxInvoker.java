@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import io.marble.rpcfx.api.RpcfxRequest;
 import io.marble.rpcfx.api.RpcfxResolver;
 import io.marble.rpcfx.api.RpcfxResponse;
+import io.marble.rpcfx.exception.RpcFxException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,14 +35,15 @@ public class RpcfxInvoker {
             response.setResult(JSON.toJSONString(result, SerializerFeature.WriteClassName));
             response.setStatus(true);
             return response;
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
 
             // 3.Xstream
 
             // 2.封装一个统一的RpcfxException
             // 客户端也需要判断异常
             e.printStackTrace();
-            response.setException(e);
+            final RpcFxException rpcFxException = new RpcFxException("服务器处理异常 : " + e.getMessage(), e);
+            response.setException(rpcFxException);
             response.setStatus(false);
             return response;
         }

@@ -4,6 +4,8 @@ package io.marble.rpcfx.client;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import io.marble.rpcfx.api.*;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,7 +45,21 @@ public final class Rpcfx {
     public static <T> T create(final Class<T> serviceClass, final String url, Filter... filters) {
 
         // 0. 替换动态代理 -> AOP
-        return (T) Proxy.newProxyInstance(Rpcfx.class.getClassLoader(), new Class[]{serviceClass}, new RpcfxInvocationHandler(serviceClass, url, filters));
+        //return (T) Proxy.newProxyInstance(Rpcfx.class.getClassLoader(), new Class[]{serviceClass}, new RpcfxInvocationHandler(serviceClass, url, filters));
+        try {
+            return (T) new ByteBuddy()
+                    .subclass(Object.class)
+                    .implement(serviceClass)
+                    .intercept(InvocationHandlerAdapter.of(new Rpcfx.RpcfxInvocationHandler(serviceClass, url)))
+                    .make()
+                    .load(serviceClass.getClassLoader())
+                    .getLoaded()
+                    .getDeclaredConstructor()
+                    .newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (T) new Object();
 
     }
 
