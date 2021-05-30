@@ -8,6 +8,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -53,6 +54,7 @@ public final class Rpcfx {
         private final Class<?> serviceClass;
         private final String url;
         private final Filter[] filters;
+        private final NettyHttpClient remoteClient = new NettyHttpClient();
 
         public <T> RpcfxInvocationHandler(Class<T> serviceClass, String url, Filter... filters) {
             this.serviceClass = serviceClass;
@@ -75,7 +77,7 @@ public final class Rpcfx {
             request.setMethod(method.getName());
             request.setParams(params);
 
-            if (null!=filters) {
+            if (null != filters) {
                 for (Filter filter : filters) {
                     if (!filter.filter(request)) {
                         return null;
@@ -96,18 +98,23 @@ public final class Rpcfx {
 
         private RpcfxResponse post(RpcfxRequest req, String url) throws IOException {
             String reqJson = JSON.toJSONString(req);
-            System.out.println("req json: "+reqJson);
+            System.out.println("req json: " + reqJson);
 
             // 1.可以复用client
             // 2.尝试使用httpclient或者netty client
-            OkHttpClient client = new OkHttpClient();
-            final Request request = new Request.Builder()
-                    .url(url)
-                    .post(RequestBody.create(JSONTYPE, reqJson))
-                    .build();
-            String respJson = client.newCall(request).execute().body().string();
-            System.out.println("resp json: "+respJson);
-            return JSON.parseObject(respJson, RpcfxResponse.class);
+//            OkHttpClient client = new OkHttpClient();
+//            final Request request = new Request.Builder()
+//                    .url(url)
+//                    .post(RequestBody.create(JSONTYPE, reqJson))
+//                    .build();
+//            String respJson = client.newCall(request).execute().body().string();
+//            System.out.println("resp json: "+respJson);
+//            return JSON.parseObject(respJson.toString(), RpcfxResponse.class);
+            //marble 修改为netty调用
+//            NettyHttpClient client = new NettyHttpClient();
+            RpcfxResponse respJson = remoteClient.post(req, url);
+            return respJson;
+
         }
     }
 }
