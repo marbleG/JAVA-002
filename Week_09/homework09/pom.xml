@@ -9,9 +9,9 @@
 <!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
 	<groupId>io.marble</groupId>
-	<artifactId>rpcfx</artifactId>
+	<artifactId>homework09</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rpcfx</name>
+	<name>homework09</name>
 	<packaging>pom</packaging>
 	<description>RPC demo project for Spring Boot</description>
 
