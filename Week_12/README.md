@@ -12,5 +12,6 @@
     1. 启动sentinel1 `redis-sentinel sentinel0.conf`
     1. 启动sentinel2 `redis-sentinel sentinel1.conf`
     1. 停止主redis，观察从数据库升级为主 `kill -9 {redis-master}`
-   
+#### 6.（必做）搭建 ActiveMQ 服务，基于 JMS，写代码分别实现对于 queue 和 topic 的消息生产和消费
+
    
